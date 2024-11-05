@@ -65,7 +65,8 @@ def get_transfeats(sig,fs,f0,label):
 # apq5 = pr.apq(spl,5)   
 filesName=[]
 result=[]
-mypath='F:\\Work\\Universty\\PR\\data\\voice_gender_detection\\males'
+folderName='males'
+mypath='E:\\Work\\University\\PR\\datas\\voice_gender_detection\\'+folderName
 for (dirpath, dirnames, filenames) in walk(mypath):
     filesName.extend(filenames)
     break
@@ -75,16 +76,17 @@ for fileName in filesName:
     sig = sig/np.max(np.absolute(sig))
     #Articulation
     #Compute articulation features
-    f0 = pr.f0_contour_pr(sig,fs)
-    Xon = get_transfeats(sig,fs,f0,'onset')
-    Xoff = get_transfeats(sig,fs,f0,'offset')
-    X_Art = np.hstack([Xon,Xoff])
-    X_ArtMean= np.mean(X_Art[0])  
-    result.append(X_ArtMean)
-    
+    try:
+        f0 = pr.f0_contour_pr(sig,fs)
+        Xon = get_transfeats(sig,fs,f0,'onset')
+        Xoff = get_transfeats(sig,fs,f0,'offset')
+        X_Art = np.hstack([Xon,Xoff])
+        result.append({'XArt':X_Art})
+    except:
+        print(fileName)
     #Prosody: Text, sentences, long speech.
 
 # X_values = np.asarray(list(X_pro.values()))
-with open('data-males.json','w') as f:
+with open('data-{folderName}.json','w') as f:
     json.dump(result,f,indent=4)   
 
